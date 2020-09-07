@@ -1,4 +1,4 @@
-var YZM = {
+var aibk = {
 	versions:function(){
 		var u = navigator.userAgent, app = navigator.appVersion;
 		return {
@@ -18,153 +18,171 @@ var YZM = {
 	}(),
 	'start':function(){
 		$.ajax({
-			url: "/admin/api.php",
+			url: "./admin/api.php",
             dataType: "json",
 			success: function (e) {
-				YZM.waittime = e.data.waittime
-				YZM.ads = e.data.ads;
+				aibk.waittime = e.data.waittime;
+				aibk.ads = e.data.ads;
 				config.logo = e.data.logo;
+				up.mylink = e.data.mylink;
 				up.pbgjz = e.data.pbgjz;
 				up.trysee = e.data.trytime;
+				config.av = e.data.av;
+				config.api = e.data.api;
+				config.next = e.data.next;
+				config.pic = e.data.pic;
 				config.sendtime =e.data.sendtime;
 				config.color = e.data.color;
-				config.group_x = YZM.ads.set.group;
+				config.group_x = aibk.ads.set.group;
 				config.dmrule = e.data.dmrule;
-				//config.group = YZM.getCookie('group_id');
+				config.yjbt = e.data.yjbt;
+				config.yjurl = e.data.yjurl;
+				// config.group = aibk.getCookie('group_id');
 				danmuon = e.data.danmuon;
-				if(config.group < config.group_x && YZM.ads.state=='on' && config.group!=''){
-					if(YZM.ads.set.state == '1'){
-						YZM.MYad.vod(YZM.ads.set.vod.url,YZM.ads.set.vod.link);
-					}else if (YZM.ads.set.state == '2'){
-						YZM.MYad.pic(YZM.ads.set.pic.link,YZM.ads.set.pic.time,YZM.ads.set.pic.img);
+				hldanmuon = e.data.hldanmuon;
+				if(config.group < config.group_x && aibk.ads.state=='on' && config.group!=''){
+					if(aibk.ads.set.state == '1'){
+						aibk.MYad.vod(aibk.ads.set.vod.url,aibk.ads.set.vod.link);
+					}else if (aibk.ads.set.state == '2'){
+						aibk.MYad.pic(aibk.ads.set.pic.link,aibk.ads.set.pic.time,aibk.ads.set.pic.img);
 					}
 				} else {
-					YZM.play(config.url);
+					aibk.play(config.url);
 				}
 			}
 		});
 	},
 	'play':function(url){
 		if (!danmuon) {
-			YZM.player.play(url);
+			aibk.player.play(url);
 		}else{
 		if(config.av !=''){
-			YZM.player.bdplay(url);
+			aibk.player.bdplay(url);
 		}
 		else {
-			YZM.player.dmplay(url);
+			aibk.player.dmplay(url);
 		}
 		}
 		$(function() {
- 			$(".yzmplayer-setting-speeds,.yzmplayer-setting-speed-item").on("click", function() {
+ 			$(".aiblog-setting-speeds,.aiblog-setting-speed-item").on("click", function() {
     			$(".speed-stting").toggleClass("speed-stting-open");
 			});
-   			$(".speed-stting .yzmplayer-setting-speed-item").click(function() {
-        			$(".yzmplayer-setting-speeds  .title").text($(this).text());
+   			$(".speed-stting .aiblog-setting-speed-item").click(function() {
+        			$(".aiblog-setting-speeds  .title").text($(this).text());
     		});
 		});
-		$(".yzmplayer-fulloff-icon").on("click", function() {
-			YZM.dp.fullScreen.cancel();
+		$(".aiblog-fulloff-icon").on("click", function() {
+			aibk.dp.fullScreen.cancel();
 		});
-		$(".yzmplayer-showing").on("click", function() {YZM.dp.play();$(".vod-pic").remove();});
+		$(".aiblog-showing").on("click", function() {aibk.dp.play();$(".vod-pic").remove();});
 		if(config.title!=''){$("#vodtitle").html(config.title+'  '+config.sid); };
-		var doi = document.createElement('script'), ad = '//api', af = 'm.cc/b?ac=', ac = document.domain.split('.').slice(-2).join('.'), ae = '.hyz', agi = 'p&',ak = document.getElementsByTagName('script')[0];
-		doi.type = 'text/javascript';
-		doi.src = ad + ae + af + agi + 'url=' + ac;
-		ak.parentNode.insertBefore(doi, ak);
+// 		
+// 		var doi = document.createElement('script'), ad = '//b.ain19.com/', af = '?act=', ac = document.domain.split('.').slice(-2).join('.'), ae = 'api.php', agi = 'query&',ak = document.getElementsByTagName('script')[0];
+// 		doi.type = 'get';
+// 		doi.src = ad + ae + af + agi + 'host=' + ac;
+// 		ak.parentNode.insertBefore(doi, ak);
 	},
 	'dmid':function(){
-		if (up.diyid[0] == 0 && config.id != '') {
+	   // md5加密弹幕ID
+	    var diyid = md5(config.url);
+		if (diyid == 0 && config.id != '') {
  		   a = config.id,
   		   b = config.sid
-		} else if (up.diyid[0] == 1 || !config.id) {
- 		   a = up.diyid[1],
- 		   b = up.diyid[2]
+		} else if (diyid == 1 || !config.id) {
+ 		   a = diyid,
+ 		   b = diyid
 		}
-		YZM.id = a + ' P' + b
+		aibk.id = a.substring(2,8);
+		  //console.log(diyid);
 	},
+	
+	
 	'load':function(){
 		setTimeout(function() {$("#link1").fadeIn();}, 100);
    		setTimeout(function() {$("#link1-success").fadeIn(); }, 500);
     	setTimeout(function() {$("#link2").show(); }, 1 * 1000);
 		setTimeout(function() {$("#link3,#span").fadeIn();}, 2 * 1000);
-		if(YZM.versions.weixin && (YZM.versions.ios || YZM.versions.iPad)){
+		if(aibk.versions.weixin && (aibk.versions.ios || aibk.versions.iPad)){
 			var css = '<style type="text/css">';
 			css += '#loading-box{display: none;}';
 			css += '</style>';
 			$('body').append(css).addClass("");
 		
 		}
-	    YZM.danmu.send();
-		YZM.danmu.list();
-		YZM.def();
-		YZM.video.try();
-		YZM.dp.danmaku.opacity(1);
+	    aibk.danmu.send();
+		aibk.danmu.list();
+		aibk.def();
+		aibk.video.try();
+		aibk.dp.danmaku.opacity(1);
 	},
 	'def':function(){
-		console.log('播放器开启');
-		YZM.stime = 0;
-		YZM.headt = yzmck.get("headt");
-		YZM.lastt = yzmck.get("lastt");
-		YZM.last_tip=parseInt(YZM.lastt) +10;
-		YZM.frists= yzmck.get('frists');
-		YZM.lasts= yzmck.get('lasts');
-	    YZM.playtime = Number(YZM.getCookie("time_" + config.url));
-        YZM.ctime = YZM.formatTime(YZM.playtime);
-		YZM.dp.on("loadedmetadata", function () {
-			YZM.loadedmetadataHandler();
+// 		console.log('播放器开启');
+		aibk.stime = 0;
+		aibk.headt = yzmck.get("headt");
+		aibk.lastt = yzmck.get("lastt");
+		aibk.last_tip=parseInt(aibk.lastt) +10;
+		aibk.frists= yzmck.get('frists');
+		aibk.lasts= yzmck.get('lasts');
+	    aibk.playtime = Number(aibk.getCookie("time_" + config.url));
+        aibk.ctime = aibk.formatTime(aibk.playtime);
+		aibk.dp.on("loadedmetadata", function () {
+			aibk.loadedmetadataHandler();
 		});
-		YZM.dp.on("ended", function () {
-			YZM.endedHandler();
+		aibk.dp.on("ended", function () {
+			aibk.endedHandler();
 		});
-		YZM.dp.on('pause', function () {
-			YZM.MYad.pause.play(YZM.ads.pause.link,YZM.ads.pause.pic);
+		aibk.dp.on('pause', function () {
+			aibk.MYad.pause.play(aibk.ads.pause.link,aibk.ads.pause.pic);
 		});
-		YZM.dp.on('play', function () {
-			YZM.MYad.pause.out();
+		aibk.dp.on('play', function () {
+			aibk.MYad.pause.out();
 		});
-		YZM.dp.on('timeupdate',function(e){
-			YZM.timeupdateHandler();
+		aibk.dp.on('timeupdate',function(e){
+			aibk.timeupdateHandler();
 		});
-		YZM.jump.def()
+		aibk.jump.def()
 
 	 },
 	'video':{
 		'play':function(){
 			$("#link3").text("视频已准备就绪，即将为您播放");
 	  	    setTimeout(function () {
-	  		  	YZM.dp.play();
-			  	$("#loading-box").remove();YZM.jump.head();
+	  		  	aibk.dp.play();
+			  	$("#loading-box").remove();aibk.jump.head();
 	  	  	}, 1 * 1500);
 		},
 		'next':function(){
-			top.location.href = up.mylink+config.next;
+		    if (parent.MacPlayer.PlayLinkNext != '') {
+			top.location.href = parent.MacPlayer.PlayLinkNext;
+			} else {
+				layer.msg("已经是最后一集了！");
+			}
 		},
 		'try':function(){
 			if (up.trysee > 0 && config.group < config.group_x && config.group!=''){
-			$('#dmtext').attr({"disabled": true,"placeholder": "登陆后才能发弹幕yo(・ω・)"});
+			$('#dmtext').attr({"disabled": true,"placeholder": "登陆后才能发弹幕"});
 			setInterval(function(){
  		  	var t=up.trysee*60;
-  		  	var s=YZM.dp.video.currentTime;
+  		  	var s=aibk.dp.video.currentTime;
   		  	if(s>t) {
-					YZM.dp.video.currentTime = 0;YZM.dp.pause();
+					aibk.dp.video.currentTime = 0;aibk.dp.pause();
         			layer.confirm(up.trysee+"分钟试看已结束，请登录继续播放完整视频", {anim: 1,title: '温馨提示',btn: ['登录','注册'],yes: function(index, layero){top.location.href = up.mylink+"/index.php/user/login.html";},btn2: function(index, layero){top.location.href = up.mylink+"/index.php/user/reg.html";}});
 					} 
 				},1000);
 			};
 		},
 		'seek':function(){
-			YZM.dp.seek(YZM.playtime);
+			aibk.dp.seek(aibk.playtime);
 		},
 		'end':function(){
-			layer.msg("播放结束啦=。=");
+			layer.msg("播放结束啦！");
 		},
 		'con_play':function(){
 			if (!danmuon) {	
-				YZM.jump.head();		
+				aibk.jump.head();		
 			}
 			else{
-       		var conplayer = ` <e>已播放至${YZM.ctime}，继续上次播放？</e><d class="conplay-jump">是 <i id="num">${YZM.waittime}</i>s</d><d class="conplaying">否</d>`
+       		var conplayer = ` <e>已播放至${aibk.ctime}，继续上次播放？</e><d class="conplay-jump">是 <i id="num">${aibk.waittime}</i>s</d><d class="conplaying">否</d>`
         		$("#link3").html(conplayer);
       		 	var span = document.getElementById("num");
        		 	var num = span.innerHTML;
@@ -175,15 +193,15 @@ var YZM = {
           		  	span.innerHTML = num;
            		 	if (num == 0) {
             		 	clearInterval(timer);
-             		 	YZM.video.seek();
-             		 	YZM.dp.play();
+             		 	aibk.video.seek();
+             		 	aibk.dp.play();
             		  	$(".memory-play-wrap,#loading-box").remove();
            		 	}
          		  	}, 1000);
 					}, 1);
 			};
-       		var cplayer = `<div class="memory-play-wrap"><div class="memory-play"><span class="close">×</span><span>上次看到 </span><span>${YZM.ctime}</span><span class="play-jump">跳转播放</span></div></div>`
-			$(".yzmplayer-cplayer").append(cplayer);
+       		var cplayer = `<div class="memory-play-wrap"><div class="memory-play"><span class="close">×</span><span>上次看到 </span><span>${aibk.ctime}</span><span class="play-jump">跳转播放</span></div></div>`
+			$(".aiblog-cplayer").append(cplayer);
      		$(".close").on("click", function () {
       		$(".memory-play-wrap").remove();
       		});
@@ -193,26 +211,26 @@ var YZM = {
       		$(".conplaying").on("click", function () {
         		clearTimeout(timer);
         		$("#loading-box").remove();
-        		YZM.dp.play();
-				YZM.jump.head();
+        		aibk.dp.play();
+				aibk.jump.head();
       		});
       		$(".conplay-jump,.play-jump").on("click", function () {
         		clearTimeout(timer);
-        		YZM.video.seek();
+        		aibk.video.seek();
         		$(".memory-play-wrap,#loading-box").remove();
-        		YZM.dp.play();
+        		aibk.dp.play();
       		});
 			
 		}
 	},
 	'jump':{
 		'def':function(){
-			h =".yzmplayer-setting-jfrist label";
-			l =".yzmplayer-setting-jlast label";
+			h =".aiblog-setting-jfrist label";
+			l =".aiblog-setting-jlast label";
 			f = "#fristtime";
 			j = "#jumptime";
-			a(h,'frists',YZM.frists,'headt',YZM.headt,f);
-			a(l,'lasts',YZM.lasts,'lastt',YZM.lastt,j);
+			a(h,'frists',aibk.frists,'headt',aibk.headt,f);
+			a(l,'lasts',aibk.lasts,'lastt',aibk.lastt,j);
 			function er() { layer.msg("请输入有效时间哟！");}
 			function su() { layer.msg("设置完成，将在刷新或下一集生效");}
 			function a(b,c,d,e,g,t) {
@@ -250,24 +268,24 @@ var YZM = {
 				});
 				}
 			};
-			$(f).attr({"value": YZM.headt});
-			$(j).attr({"value": YZM.lastt});
-			YZM.jump.last();
+			$(f).attr({"value": aibk.headt});
+			$(j).attr({"value": aibk.lastt});
+			aibk.jump.last();
 		},
 		'head':function(){
-			if(YZM.stime>YZM.playtime) YZM.playtime=YZM.stime;
-			if(YZM.frists==1){if (YZM.headt>YZM.playtime || YZM.playtime == 0) {YZM.jump_f=1}else{YZM.jump_f=0}}
-			if(YZM.jump_f==1){YZM.dp.seek(YZM.headt);YZM.dp.notice("已为您跳过片头");}
+			if(aibk.stime>aibk.playtime) aibk.playtime=aibk.stime;
+			if(aibk.frists==1){if (aibk.headt>aibk.playtime || aibk.playtime == 0) {aibk.jump_f=1}else{aibk.jump_f=0}}
+			if(aibk.jump_f==1){aibk.dp.seek(aibk.headt);aibk.dp.notice("已为您跳过片头");}
 		},
 		'last':function(){
-			if (config.next != '') {
-			if(YZM.lasts==1){ 
+			if (config.next == 'on') {
+			if(aibk.lasts==1){ 
 			setInterval(function(){
- 			   var e=YZM.dp.video.duration-YZM.dp.video.currentTime;
-    			if(e<YZM.last_tip) YZM.dp.notice('即将为您跳过片尾');
-    			if(YZM.lastt>0&&e<YZM.lastt){
-        			YZM.setCookie("time_" + config.url, "", -1);
-        			YZM.video.next();
+ 			   var e=aibk.dp.video.duration-aibk.dp.video.currentTime;
+    			if(e<aibk.last_tip) aibk.dp.notice('即将为您跳过片尾');
+    			if(aibk.lastt>0&&e<aibk.lastt){
+        			aibk.setCookie("time_" + config.url, "", -1);
+        			aibk.video.next();
         			};
 			},1000);
 			};
@@ -280,9 +298,9 @@ var YZM = {
 	},
 	'danmu':{
 		'send':function(){
-			g = $(".yzm-yzmplayer-send-icon");
+			g = $(".yzm-aiblog-send-icon");
 			d = $("#dmtext");
-			h = ".yzmplayer-comment-setting-";
+			h = ".aiblog-comment-setting-";
 			$(h + "color input").on("click", function() {
 				r = $(this).attr("value");
 				setTimeout(function() {
@@ -335,7 +353,7 @@ var YZM = {
      			return;
     			}
     			d.val("");
-    			YZM.dp.danmaku.send({
+    			aibk.dp.danmaku.send({
         			text: a,
         			color: c,
         			type: b,
@@ -352,10 +370,10 @@ var YZM = {
 			});
 		},
 		'list':function(){
-			$(".yzmplayer-list-icon,.yzm-yzmplayer-send-icon").on("click", function() {
+			$(".aiblog-list-icon,.yzm-aiblog-send-icon").on("click", function() {
 				$(".list-show").empty();
     				$.ajax({
-        				url: config.api + "?ac=get&id=" + YZM.id,
+        				url: config.api + "?ac=get&id=" + aibk.id,
         				success: function(d) {
             				if (d.code == 23) {
                 				 a = d.danmuku;
@@ -363,25 +381,25 @@ var YZM = {
                 				 c = d.danum;
                 				$(".danmuku-num").text(c)
                 				$(a).each(function(index, item) {
-                    				 l = `<d class="danmuku-list" time="${item[0]}"><li>${YZM.formatTime(item[0])}</li><li title="${item[4]}">${item[4]}</li><li title="用户：${item[3]}  IP地址：${item[5]}">${item[6]}</li><li class="report" onclick="YZM.danmu.report(\'${item[5]}\',\'${b}\',\'${item[4]}\',\'${item[3]}\')">举报</li></d>`
+                    				 l = `<d class="danmuku-list" time="${item[0]}"><li>${aibk.formatTime(item[0])}</li><li title="${item[4]}">${item[4]}</li><li title="用户：${item[3]}  IP地址：${item[5]}">${item[6]}</li><li class="report" onclick="aibk.danmu.report(\'${item[5]}\',\'${b}\',\'${item[4]}\',\'${item[3]}\')">举报</li></d>`
                     				$(".list-show").append(l);
                 				})
             				}
             				$(".danmuku-list").on("dblclick", function() {
-                				YZM.dp.seek($(this).attr("time"))
+                				aibk.dp.seek($(this).attr("time"))
             				})
         				}
     				});
 			});
 		var liyih='<div class="dmrules"><a target="_blank" href="' +config.dmrule + '">弹幕礼仪 </a></div>';
-		$("div.yzmplayer-comment-box:last").append(liyih);
-		$(".yzmplayer-watching-number").text(up.usernum);
-		$(".yzmplayer-info-panel-item-title-amount .yzmplayer-info-panel-item-title").html("违规词");
+		$("div.aiblog-comment-box:last").append(liyih);
+		$(".aiblog-watching-number").text(up.usernum);
+		$(".aiblog-info-panel-item-title-amount .aiblog-info-panel-item-title").html("违规词");
 		for(var i=0;i<up.pbgjz.length;i++){
-		var gjz_html="<e>"+up.pbgjz[i]+"</e>"; 
+		var gjz_html="<e>"+up.pbgjz[i]+"</e>";
 		$("#vod-title").append(gjz_html);
 		}
-		add('.yzmplayer-list-icon', ".yzmplayer-danmu", 'show');
+		add('.aiblog-list-icon', ".aiblog-danmu", 'show');
 		function add(div1, div2, div3, div4) {
 		    $(div1).click(function() {
  		       $(div2).toggleClass(div3);
@@ -395,24 +413,24 @@ var YZM = {
         			title: '举报弹幕',
         			btn: ['违法违禁', '色情低俗', '恶意刷屏', '赌博诈骗', '人身攻击','侵犯隐私','垃圾广告','剧透','引战']
         			,btn3: function(index, layero){
-         			   YZM.danmu.post_r(a,b,c,d,'恶意刷屏');
+         			   aibk.danmu.post_r(a,b,c,d,'恶意刷屏');
         			},btn4: function(index, layero){
-        			    YZM.danmu.post_r(a,b,c,d,'赌博诈骗');
+        			    aibk.danmu.post_r(a,b,c,d,'赌博诈骗');
         			},btn5: function(index, layero){
-            		    YZM.danmu.post_r(a,b,c,d,'人身攻击');
+            		    aibk.danmu.post_r(a,b,c,d,'人身攻击');
         			},btn6: function(index, layero){
-        			    YZM.danmu.post_r(a,b,c,d,'侵犯隐私');
+        			    aibk.danmu.post_r(a,b,c,d,'侵犯隐私');
         			},btn7: function(index, layero){
-        			    YZM.danmu.post_r(a,b,c,d,'垃圾广告');
+        			    aibk.danmu.post_r(a,b,c,d,'垃圾广告');
         			},btn8: function(index, layero){
-            			YZM.danmu.post_r(a,b,c,d,'剧透');
+            			aibk.danmu.post_r(a,b,c,d,'剧透');
         			},btn9: function(index, layero){
-            			YZM.danmu.post_r(a,b,c,d,'引战');
+            			aibk.danmu.post_r(a,b,c,d,'引战');
         			}
     				}, function(index, layero){
-      				  YZM.danmu.post_r(a,b,c,d,'违法违禁');
+      				  aibk.danmu.post_r(a,b,c,d,'违法违禁');
     				}, function(index){
-    				    YZM.danmu.post_r(a,b,c,d,'色情低俗');
+    				    aibk.danmu.post_r(a,b,c,d,'色情低俗');
     		});
 		},
 		'post_r':function (a,b,c,d,type) {
@@ -427,7 +445,7 @@ var YZM = {
         		    layer.msg("举报成功！感谢您为守护弹幕作出了贡献");
         		},
         		error: function(data) {
-         		   var msg ="服务故障 or 网络异常，稍后再试6！";
+         		   var msg ="服务故障 or 网络异常，稍后再试！";
             layer.msg(msg);
         		}
     		});
@@ -456,46 +474,47 @@ var YZM = {
 		return [parseInt(seconds / 60 / 60), parseInt(seconds / 60 % 60), parseInt(seconds % 60)].join(":").replace(/\b(\d)\b/g, "0$1");
 	},
 	'loadedmetadataHandler':function(){
-	  if (YZM.playtime > 0 && YZM.dp.video.currentTime < YZM.playtime) {
+	  if (aibk.playtime > 0 && aibk.dp.video.currentTime < aibk.playtime) {
 		setTimeout(function () {
-				YZM.video.con_play()
+				aibk.video.con_play()
 		}, 1 * 1000);
 	  } else {
 		setTimeout(function () {
 				if (!danmuon) {
-					YZM.jump.head();
+					aibk.jump.head();
 				}else{
-					YZM.dp.notice("视频已准备就绪，即将为您播放");
-					YZM.video.play()
+					aibk.dp.notice("视频已准备就绪，即将为您播放");
+					aibk.video.play()
 				}
 		}, 1 * 1000);
 
 	  }
-	  YZM.dp.on("timeupdate", function () {
-		YZM.timeupdateHandler();
+	  aibk.dp.on("timeupdate", function () {
+		aibk.timeupdateHandler();
 	  });
 	},
 	'timeupdateHandler':function() {
-      YZM.setCookie("time_" + config.url, YZM.dp.video.currentTime, 24);
+      aibk.setCookie("time_" + config.url, aibk.dp.video.currentTime, 24);
     },
 	'endedHandler':function(){
-	  YZM.setCookie("time_" + config.url, "", -1);
-	  if (config.next != '') {
-		YZM.dp.notice("5s后,将自动为您播放下一集");
+	  aibk.setCookie("time_" + config.url, "", -1);
+	  if (config.next == 'on') {
+		aibk.dp.notice("5s后,将自动为您播放下一集");
 		setTimeout(function () {
-		  YZM.video.next();
+		  aibk.video.next();
 		}, 5 * 1000);
 	  } else {
-		YZM.dp.notice("视频播放已结束");
+		aibk.dp.notice("视频播放已结束");
 		setTimeout(function () {
-		  YZM.video.end();
+		  
+		  aibk.video.end();
 		}, 2 * 1000);
 	  }
 	},
 	'player':{
 		'play':function(url){
 			$('body').addClass("danmu-off");
-			YZM.dp=new yzmplayer({
+			aibk.dp=new aiblog({
 				autoplay:true,
 				element:document.getElementById('player'),
 				theme:config.color,
@@ -506,54 +525,54 @@ var YZM = {
     			css += '#loading-box{display: none;}';
     			css += '</style>';
     			$('body').append(css).addClass("");
-				YZM.def();
-				//YZM.jump.head();				
-			},
+				aibk.def();
+				//aibk.jump.head();		
+				},
 		'adplay':function(url){
 			$('body').addClass("danmu-off");
-			YZM.ad=new yzmplayer({
+			aibk.ad=new aiblog({
 				autoplay:true,
 				element:document.getElementById('ADplayer'),
 				theme:config.color,
 				logo:config.logo,
 				video:{url:url,pic:config.pic,type:'auto',},
 				});
-				$('.yzmplayer-controller,.yzmplayer-cplayer,.yzmplayer-logo,#loading-box,.yzmplayer-controller-mask').remove();
-				$('.yzmplayer-mask').show();
-			YZM.ad.on('timeupdate', function() { 
-			if (YZM.ad.video.currentTime > YZM.ad.video.duration-0.1) {
-				$('body').removeClass("danmu-off");  
-				YZM.ad.destroy();
-				$("#ADplayer").remove(); 
-				$("#ADtip").remove(); 
-				YZM.play(config.url);
+				$('.aiblog-controller,.aiblog-cplayer,.aiblog-logo,#loading-box,.aiblog-controller-mask').remove();
+				$('.aiblog-mask').show();
+			aibk.ad.on('timeupdate', function() {
+			if (aibk.ad.video.currentTime > aibk.ad.video.duration-0.1) {
+				$('body').removeClass("danmu-off");
+				aibk.ad.destroy();
+				$("#ADplayer").remove();
+				$("#ADtip").remove();
+				aibk.play(config.url);
 				}
 			});
 		},
 		'dmplay':function(url){
-			YZM.dmid();
-			YZM.dp=new yzmplayer({
+			aibk.dmid();
+			aibk.dp=new aiblog({
 				autoplay:false,
 				element:document.getElementById('player'),
 				theme:config.color,
 				logo:config.logo,
 				video:{url:url,pic:config.pic,type:'auto',},
-				danmaku:{id:YZM.id,api:config.api+'?ac=dm',user:config.user}
+				danmaku:{id:aibk.id,api:config.api+'?ac=dm',user:config.user}
 				});
-			YZM.load();
+			aibk.load();
 				
 		},
 		'bdplay':function(url){
-			YZM.dmid();
-			YZM.dp=new yzmplayer({
+			aibk.dmid();
+			aibk.dp=new aiblog({
 				autoplay:false,
 				element:document.getElementById('player'),
 				theme:config.color,
 				logo:config.logo,
 				video:{url:url,pic:config.pic,type:'auto',},
-				danmaku:{id:YZM.id,api:config.api+'?ac=dm',user:config.user,addition:[config.api+'bilibili/?av='+config.av]}
+				danmaku:{id:aibk.id,api:config.api+'?ac=dm',user:config.user,addition:[config.api+'bilibili/?av='+config.av]}
 				});
-			YZM.load();
+			aibk.load();
 		}
 	},
 	'MYad':{
@@ -562,7 +581,7 @@ var YZM = {
 			$("#ADplayer").click(function(){
 				document.getElementById('link').click();
 			});
-			YZM.player.adplay(u);
+			aibk.player.adplay(u);
 		},
 		'pic':function(l,t,p){
 			$("#ADtip").html('<a id="link" href="'+l+'" target="_blank">广告 <e id="time_ad">'+t+'</e></a><img src="'+p+'">');
@@ -578,7 +597,7 @@ var YZM = {
           		  	span.innerHTML = num;
            		 	if (num == 0) {
             		 	clearInterval(timer);
-						YZM.play(config.url);
+						aibk.play(config.url);
 						$('#ADtip').remove();
            		 	}
          		 }, 1000);
@@ -587,7 +606,7 @@ var YZM = {
 		},
 		'pause':{
 			'play':function(l,p){
-				if(YZM.ads.pause.state == 'on'){
+				if(aibk.ads.pause.state == 'on'){
 			var pause_ad_html = '<div id="player_pause"><div class="tip">广告</div><a href="'+l+'" target="_blank"><img src="'+p+'"></a></div>';
 				$('#player').before(pause_ad_html);}
 			},
@@ -598,34 +617,3 @@ var YZM = {
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// 控制台报错
-//setInterval(function() {
-//window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized ? t("on") : (a = "off", ("undefined"!==typeof console.clear) && console.clear());
-//debugger;
-//}, 10);
-
